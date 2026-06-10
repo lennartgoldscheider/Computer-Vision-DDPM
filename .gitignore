@@ -12,3 +12,10 @@ __pycache__/
 outputs/
 checkpoints/
 runs/
+
+# datasets
+data/
+datasets/
+*.tar
+*.zip
+*.h5
