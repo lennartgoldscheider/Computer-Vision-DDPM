@@ -84,7 +84,7 @@ class UpBlock(nn.Module):
     
 class UNet(nn.Module):
     def __init__(self, image_channels=3, base_channels=64, time_emb_dim=256):
-
+        # For latent call with image_channels = latent_channels
         super().__init__()
 
         self.time_mlp = nn.Sequential(SinusoidalTimeEmbedding(time_emb_dim),

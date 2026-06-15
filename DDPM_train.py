@@ -3,10 +3,11 @@
 # Connect Diffusion and Denoising for training (done)
 # Add Generation pipeline (done)
 # Add Frechet Inception Distance & Inception Score & Average inference time for batch generation (done)
+# (add multi checkpoint generation) (done)
 
-# (add multi checkpoint generation)
 # Optional: Improve training with EMA and diversity checks (samples every epoch)
-# latent space diffusion
+
+# latent space diffusion (Autoencoder (done), generate, train (done), Denoising (done), Diffusion (done))
 # Check speedup, visual quality and metrics for the accelerated version
 # Ablation study for varying sampling steps T = 1000 vs 100 or 10
 

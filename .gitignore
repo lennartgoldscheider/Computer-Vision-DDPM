@@ -12,6 +12,7 @@ __pycache__/
 outputs/
 checkpoints/
 runs/
+training/
 
 # datasets
 data/

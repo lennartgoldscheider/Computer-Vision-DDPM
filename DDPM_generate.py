@@ -81,7 +81,10 @@ def generate(
         device=device
     )
 
-    run_dir = Path(output_root) / timestamp()
+    #run_dir = Path(output_root) / timestamp()
+    checkpoint_name = Path(checkpoint_path).stem
+    run_name = "_".join(checkpoint_name.split("_")[:3])
+    run_dir = Path(output_root) / run_name
     run_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"Saving samples to:")
