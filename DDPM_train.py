@@ -8,7 +8,7 @@
 
 # Optional: Improve training with EMA and diversity checks (samples every epoch)
 
-# Check speedup, visual quality and metrics for the accelerated version
+# Check speedup, visual quality and metrics for the accelerated version (~ 2 sec per image with DDPM and ~0.3 sec per image for latent)
 # Ablation study for varying sampling steps T = 1000 vs 100 or 10
 
 import os

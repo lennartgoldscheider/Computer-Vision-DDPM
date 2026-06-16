@@ -1,29 +1,22 @@
-import os
 import time
 import torch
-import numpy as np
 from pathlib import Path
-from torchvision import transforms
 from PIL import Image
 from torch.utils.data import DataLoader, Dataset
+from torchvision import transforms
 
 from torchmetrics.image.fid import FrechetInceptionDistance
 from torchmetrics.image.inception import InceptionScore
 
 
-# --------------------------------------------------
-# Dataset loader for image folders
-# --------------------------------------------------
-
+# Dataset (real images)
 class ImageFolderDataset(Dataset):
     def __init__(self, root, image_size=64):
         self.root = Path(root)
         self.paths = list(self.root.glob("*.png")) + list(self.root.glob("*.jpg"))
-
         self.transform = transforms.Compose([
             transforms.Resize((image_size, image_size)),
-            transforms.ToTensor(),
-            transforms.Lambda(lambda x: (x * 255).to(torch.uint8))
+            transforms.PILToTensor(),  # uint8 [0,255]
         ])
 
     def __len__(self):
@@ -34,41 +27,25 @@ class ImageFolderDataset(Dataset):
         return self.transform(img)
 
 
-# --------------------------------------------------
-# Load images from folder
-# --------------------------------------------------
-
 def load_images(folder, image_size=64, batch_size=32):
     dataset = ImageFolderDataset(folder, image_size)
-    loader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
-    return loader
+    return DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
 
-# --------------------------------------------------
-# FID + Inception Score
-# --------------------------------------------------
-
+# Metrics
 def evaluate_metrics(real_dir, fake_dir, device="cuda"):
-
     real_loader = load_images(real_dir)
     fake_loader = load_images(fake_dir)
 
-    fid = FrechetInceptionDistance(
-        feature=2048
-    ).to(device)
-
+    fid = FrechetInceptionDistance(feature=2048).to(device)
     inception = InceptionScore().to(device)
 
-    # --------------------------
     # REAL IMAGES
-    # --------------------------
     for imgs in real_loader:
         imgs = imgs.to(device)
         fid.update(imgs, real=True)
 
-    # --------------------------
     # FAKE IMAGES
-    # --------------------------
     for imgs in fake_loader:
         imgs = imgs.to(device)
         fid.update(imgs, real=False)
@@ -79,50 +56,41 @@ def evaluate_metrics(real_dir, fake_dir, device="cuda"):
 
     return fid_score, is_mean.item(), is_std.item()
 
-
-# --------------------------------------------------
-# Inference time benchmark
-# --------------------------------------------------
-
-def measure_inference_time(generate_fn, num_images=100):
-
-    start = time.perf_counter()
-
-    _ = generate_fn(num_images=num_images)
-
-    end = time.perf_counter()
-
-    total = end - start
-
-    return {
-        "total_time": total,
-        "avg_per_image": total / num_images
-    }
-
-
-# --------------------------------------------------
-# Main
-# --------------------------------------------------
-
 def main():
 
     real_dir = "datasets/flowers"
-    fake_dir = "outputs/samples/20260613_151543"
+    fake_dirs = ["outputs/samples/flowers_ddpm_epoch20", "outputs/samples/flowers_ddpm_epoch180", "outputs/samples/latent_ddpm_epoch20", "outputs/samples/latent_ddpm_epoch180"]
+    for fake_dir in fake_dirs:
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+        device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    print("Evaluating...")
+        print("Evaluating...")
 
-    fid, is_mean, is_std = evaluate_metrics(
-        real_dir,
-        fake_dir,
-        device=device
-    )
+        fid, is_mean, is_std = evaluate_metrics(real_dir=real_dir, fake_dir=fake_dir, device=device)
 
-    print("\n--- Results ---")
-    print(f"FID: {fid:.2f}")
-    print(f"Inception Score: {is_mean:.2f} ± {is_std:.2f}")
+        print("\n--- Results ---")
+        print(f"FID: {fid:.2f}")
+        print(f"Inception Score: {is_mean:.2f} ± {is_std:.2f}")
 
 
 if __name__ == "__main__":
     main()
+
+# --- Results ---
+# FID: 423.27
+# Inception Score: 1.31 ± 0.24
+# Evaluating...
+
+# --- Results ---
+# FID: 235.21
+# Inception Score: 1.54 ± 0.24
+# Evaluating...
+
+# --- Results ---
+# FID: 385.30
+# Inception Score: 1.45 ± 0.28
+# Evaluating...
+
+# --- Results ---
+# FID: 266.05
+# Inception Score: 1.46 ± 0.30

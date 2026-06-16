@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from DDPM_generate import generate
 
 # Generation of images for all DDPM checkpoints
@@ -10,32 +9,20 @@ CHECKPOINT_DIR = Path("outputs/checkpoints")
 def find_checkpoint(epoch: int):
 
     pattern = f"flowers_ddpm_epoch{epoch}_*.pt"
-
     matches = sorted(
         CHECKPOINT_DIR.glob(pattern)
     )
 
     if len(matches) == 0:
-        raise FileNotFoundError(
-            f"No checkpoint found for epoch {epoch}"
-        )
-
+        raise FileNotFoundError(f"No checkpoint found for epoch {epoch}")
+    
     if len(matches) > 1:
-        print(
-            f"Warning: multiple checkpoints found "
-            f"for epoch {epoch}. Using newest."
-        )
+        print(f"Warning: multiple checkpoints found for epoch {epoch}. Using newest.")
 
     return matches[-1]
 
 
-def generate_from_epochs(
-    epochs,
-    num_images=16,
-    batch_size=8,
-    image_size=64,
-    timesteps=1000,
-):
+def generate_from_epochs(epochs, num_images=16, batch_size=8, image_size=64, timesteps=1000,):
 
     for epoch in epochs:
 
