@@ -21,6 +21,10 @@ def train_autoencoder(model, dataloader, device,
 
     model.train()
 
+    # checkpoint_path = "outputs/checkpoints/flowers_autoencoder_epoch50_32_20260616_232241.pt" #flowers_autoencoder_epoch50_16_20260616_223642.pt" # flowers_autoencoder_epoch40_16_20260616_223642.pt" # flowers_autoencoder_epoch20_16_20260616_223642.pt" # flowers_autoencoder_epoch50_20260616_220930.pt"
+    # checkpoint = torch.load(checkpoint_path, map_location=device)
+    # model.load_state_dict(checkpoint["model_state_dict"])
+
     optimizer = optim.Adam(model.parameters(), lr=lr)
     criterion = nn.L1Loss()
 
@@ -47,8 +51,10 @@ def train_autoencoder(model, dataloader, device,
 
             if step % log_every == 0:
                 losses.append(loss.item())
+            if step == 2:
+                break
 
-        avg_loss = epoch_loss / len(dataloader)
+        avg_loss = epoch_loss / 3 #len(dataloader)
 
         print(f"Epoch {epoch+1:03d} | avg loss = {avg_loss:.6f}")
 
@@ -88,9 +94,9 @@ def main():
         model=model,
         dataloader=dataloader,
         device=device,
-        epochs=50,
-        save_every=20,
-        run_name="flowers_autoencoder"
+        epochs=2000,
+        save_every=200,
+        run_name="flowers_autoencoder_3batches"
     )
 
     torch.save(losses, "training/autoencoder_losses.pt")

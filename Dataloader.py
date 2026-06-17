@@ -25,7 +25,11 @@ class FlowersDataset(Dataset):
         return len(self.paths)
 
     def __getitem__(self, idx):
-        img = Image.open(self.paths[idx]).convert("RGB")
+        try:
+            img = Image.open(self.paths[idx]).convert("RGB")
+        except Exception as e:
+            print("Bad image:", self.paths[idx])
+            raise e
         return self.transform(img)
 
 

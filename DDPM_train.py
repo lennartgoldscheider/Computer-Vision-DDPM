@@ -112,11 +112,11 @@ def main():
         diffusion=diffusion,
         dataloader=dataloader,
         device=device,
-        epochs=200,
+        epochs=1, #200,
         log_every=100,
         run_name=run_name,
         save_dir=save_dir,
-        save_every_epochs=20
+        save_every_epochs=1
     )
 
     os.makedirs(save_dir, exist_ok=True)

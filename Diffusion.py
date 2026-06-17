@@ -54,6 +54,7 @@ class GaussianDiffusion:
         if noise is None:
             noise = torch.randn_like(x0) # Sample noise
 
+        # for elemenwise multiplication
         sqrt_a = self.sqrt_alphas_cumprod[t][:, None, None, None]
         sqrt_1a = self.sqrt_one_minus_alphas_cumprod[t][:, None, None, None]
 
@@ -65,6 +66,10 @@ class GaussianDiffusion:
         return torch.randint(0, self.timesteps, (batch_size,), device=self.device)
     
     # Function to reverse a step of noise
+    
+
+    # BACKWARD PROCESS ????##
+
     @torch.no_grad()
     def p_sample(self, model, x, t):
         betas_t = self.betas[t][:, None, None, None] # [B, 1, 1, 1]
@@ -93,5 +98,5 @@ class GaussianDiffusion:
         for timestep in reversed(range(self.timesteps)):
             t = torch.full((batch_size,), timestep, device=self.device, dtype=torch.long) # Timestep for Batch B
             x = self.p_sample(model, x, t)
-
+        print("image done")
         return x

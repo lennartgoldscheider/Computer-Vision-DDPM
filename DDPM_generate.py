@@ -45,6 +45,7 @@ def generate(
     batch_size=16,
     image_size=64,
     timesteps=1000,
+    num_generations = None,
     schedule="cosine",
     output_root="outputs/samples",):
 
@@ -72,10 +73,10 @@ def generate(
 
     generated = []
     total_start = time.perf_counter()
-    remaining = num_images
+    remaining = num_generations if num_generations else num_images
 
     while remaining > 0:
-
+        print("remaining:", remaining)
         current_batch = min(batch_size, remaining)
         batch_start = time.perf_counter()
 

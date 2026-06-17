@@ -89,7 +89,7 @@ def main():
     # ── 2. Diffusion ──────────────────────────────────────────────────────────
     diff = GaussianDiffusion(timesteps=args.timesteps, schedule="cosine", device=device)
     x0 = batch[:1].to(device)          # erstes Bild aus dem Batch
-
+    # Here: only example for one picture 
     timesteps_to_show = [0, 100, 250, 500, 750, 999]
     noisy_images = []
     for t_val in timesteps_to_show:

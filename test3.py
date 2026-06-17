@@ -81,7 +81,7 @@ def main():
     print("\nLoading trained autoencoder...")
     model_trained = Autoencoder().to(device)
 
-    checkpoint_path = "outputs/checkpoints/flowers_autoencoder_epoch50_20260614_171314.pt"
+    checkpoint_path = "outputs/checkpoints/flowers_autoencoder_epoch50_32_20260616_232241.pt" #flowers_autoencoder_epoch50_16_20260616_223642.pt" # flowers_autoencoder_epoch40_16_20260616_223642.pt" # flowers_autoencoder_epoch20_16_20260616_223642.pt" # flowers_autoencoder_epoch50_20260616_220930.pt"
     checkpoint = torch.load(checkpoint_path, map_location=device)
     model_trained.load_state_dict(checkpoint["model_state_dict"])
 
