@@ -9,6 +9,13 @@ from tqdm import tqdm
 from Autoencoder import Autoencoder
 from Dataloader import get_dataloader
 
+import logging
+
+logging.basicConfig(
+    filename="training_3batch_32channels.log",
+    level=logging.INFO,
+    format="%(asctime)s %(message)s"
+)
 
 # Training
 
@@ -21,7 +28,7 @@ def train_autoencoder(model, dataloader, device,
 
     model.train()
 
-    # checkpoint_path = "outputs/checkpoints/flowers_autoencoder_epoch50_32_20260616_232241.pt" #flowers_autoencoder_epoch50_16_20260616_223642.pt" # flowers_autoencoder_epoch40_16_20260616_223642.pt" # flowers_autoencoder_epoch20_16_20260616_223642.pt" # flowers_autoencoder_epoch50_20260616_220930.pt"
+    # checkpoint_path = "outputs/checkpoints/flowers_autoencoder_3batch_16channels_epoch2000_20260617_165009.pt" #flowers_autoencoder_epoch50_32_20260616_232241.pt" #flowers_autoencoder_epoch50_16_20260616_223642.pt" # flowers_autoencoder_epoch40_16_20260616_223642.pt" # flowers_autoencoder_epoch20_16_20260616_223642.pt" # flowers_autoencoder_epoch50_20260616_220930.pt"
     # checkpoint = torch.load(checkpoint_path, map_location=device)
     # model.load_state_dict(checkpoint["model_state_dict"])
 
@@ -54,7 +61,8 @@ def train_autoencoder(model, dataloader, device,
             if step == 2:
                 break
 
-        avg_loss = epoch_loss / 3 #len(dataloader)
+        avg_loss = epoch_loss / 3 # len(dataloader)
+        logging.info(f"loss={avg_loss:.6f}")
 
         print(f"Epoch {epoch+1:03d} | avg loss = {avg_loss:.6f}")
 
@@ -79,7 +87,7 @@ def main():
 
     model = Autoencoder(
         in_channels=3,
-        latent_channels=4,
+        latent_channels=32, #16, # 4,
         base_channels=64
     ).to(device)
 
@@ -95,8 +103,8 @@ def main():
         dataloader=dataloader,
         device=device,
         epochs=2000,
-        save_every=200,
-        run_name="flowers_autoencoder_3batches"
+        save_every=20,
+        run_name="flowers_autoencoder_3batch_32channel"
     )
 
     torch.save(losses, "training/autoencoder_losses.pt")
