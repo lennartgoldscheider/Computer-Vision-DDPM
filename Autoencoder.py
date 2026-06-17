@@ -7,9 +7,9 @@ class ResBlock(nn.Module):
     def __init__(self, in_ch, out_ch):
         super().__init__()
 
-        # groups = min(8, in_ch)
-        # self.norm1 = nn.GroupNorm(groups, in_ch)
-        # self.norm2 = nn.GroupNorm(8, out_ch)
+        groups = min(8, in_ch)
+        self.norm1 = nn.GroupNorm(groups, in_ch)
+        self.norm2 = nn.GroupNorm(8, out_ch)
 
         self.conv1 = nn.Conv2d(in_ch, out_ch, 3, padding=1)
         self.conv2 = nn.Conv2d(out_ch, out_ch, 3, padding=1)
@@ -23,8 +23,8 @@ class ResBlock(nn.Module):
         )
 
     def forward(self, x):
-        h = self.act(self.conv1(x)) #self.norm1(x)))
-        h = self.conv2(h) #self.norm2(h))
+        h = self.act(self.conv1(self.norm1(x)))
+        h = self.conv2(self.norm2(h))
         return self.act(h + self.skip(x))
 
 
@@ -107,7 +107,7 @@ class Decoder(nn.Module):
 
 # Autoencoder
 class Autoencoder(nn.Module):
-    def __init__(self, in_channels=3, latent_channels=16, base_channels=64):
+    def __init__(self, in_channels=3, latent_channels=4, base_channels=64):
         super().__init__()
 
         self.encoder = Encoder(

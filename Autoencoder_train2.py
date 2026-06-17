@@ -12,17 +12,19 @@ from Dataloader import get_dataloader
 import logging
 
 logging.basicConfig(
-    filename="training_3batch_32channels.log",
+    filename="training_whole_8channels_norm.log",
     level=logging.INFO,
     format="%(asctime)s %(message)s"
 )
+
+
 
 # Training
 
 def train_autoencoder(model, dataloader, device,
     epochs=50,
     lr=1e-4,
-    log_every=20,
+    log_every=1,
     save_every=10,
     run_name="autoencoder"):
 
@@ -58,8 +60,8 @@ def train_autoencoder(model, dataloader, device,
 
             if step % log_every == 0:
                 losses.append(loss.item())
-            if step == 2:
-                break
+            # if step == 2:
+            #     break
 
         avg_loss = epoch_loss / 3 # len(dataloader)
         logging.info(f"loss={avg_loss:.6f}")
@@ -87,7 +89,7 @@ def main():
 
     model = Autoencoder(
         in_channels=3,
-        latent_channels=32, #16, # 4,
+        latent_channels=8,
         base_channels=64
     ).to(device)
 
@@ -104,7 +106,7 @@ def main():
         device=device,
         epochs=2000,
         save_every=20,
-        run_name="flowers_autoencoder_3batch_32channel"
+        run_name="flowers_autoencoder_whole_8channels_norm"
     )
 
     torch.save(losses, "training/autoencoder_losses.pt")
