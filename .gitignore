@@ -9,8 +9,6 @@ __pycache__/
 .vscode/
 
 # Training outputs
-outputs/
-checkpoints/
 runs/
 training/
 
