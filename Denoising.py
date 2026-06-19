@@ -1,6 +1,7 @@
 import math
 import torch
 import torch.nn as nn
+import os
 
 # This file contains most parts needed for the Denoising process - namely the UNet and its components.
 # Part of the Denoising process are implemented in the GaussianDiffusion class from the Diffusion file.
@@ -116,3 +117,14 @@ class UNet(nn.Module):
         x = self.up3(x, skip1, t)
 
         return self.output_conv(x)
+    
+    def save_checkpoint(self,epoch, save_dir, run_name, timestamp, optimizer, avg_loss):
+        path = os.path.join(save_dir, f"{run_name}_epoch{epoch+1}_{timestamp}.pt")
+        torch.save({
+            "epoch": epoch,
+            "model_state_dict": self.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "losses": avg_loss,
+            "timestamp": timestamp
+        }, path)
+        print(f"\n✓ checkpoint saved → {path}")

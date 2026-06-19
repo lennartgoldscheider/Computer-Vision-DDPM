@@ -2,7 +2,7 @@ import torch
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-from Autoencoder import Autoencoder
+from Autoencoder import Autoencoder, Autoencoder2
 from Dataloader import get_dataloader
 
 # Generation test of Autoencoder Quality
@@ -89,19 +89,19 @@ def main():
     )
 
     print("\nLoading trained autoencoder...")
-    model_trained1 = Autoencoder(in_channels=3,
+    model_trained1 = Autoencoder2(in_channels=3,
+        latent_channels=8,
+        base_channels=64).to(device)
+    
+    model_trained2 = Autoencoder2(in_channels=3,
         latent_channels=16,
         base_channels=64).to(device)
     
-    model_trained2 = Autoencoder(in_channels=3,
-        latent_channels=16,
-        base_channels=64).to(device)
-    
-    checkpoint_path = "outputs/checkpoints/flowers_autoencoder_whole_16channel_epoch160_20260617_185844.pt" #flowers_autoencoder_3batch_32channel_epoch2000_20260617_182211.pt"
+    checkpoint_path = "outputs/checkpoints/flowers_autoencoder_whole_16channels_nownorm_L1_epoch200_20260618_113626.pt" #flowers_autoencoder_whole_16channel_epoch160_20260617_185844.pt" #flowers_autoencoder_3batch_32channel_epoch2000_20260617_182211.pt"
     checkpoint = torch.load(checkpoint_path, map_location=device)
     model_trained2.load_state_dict(checkpoint["model_state_dict"])
 
-    checkpoint_path = "outputs/checkpoints/flowers_autoencoder_3batch_16channels_cont_epoch2000_20260617_173750.pt" #flowers_autoencoder_epoch50_32_20260616_232241.pt" #flowers_autoencoder_epoch50_16_20260616_223642.pt" # flowers_autoencoder_epoch40_16_20260616_223642.pt" # flowers_autoencoder_epoch20_16_20260616_223642.pt" # flowers_autoencoder_epoch50_20260616_220930.pt"
+    checkpoint_path = "outputs/checkpoints/flowers_autoencoder_whole_8channels_nownorm_L1_epoch120_20260618_200234.pt" #flowers_autoencoder_3batch_16channels_cont_epoch2000_20260617_173750.pt" #flowers_autoencoder_epoch50_32_20260616_232241.pt" #flowers_autoencoder_epoch50_16_20260616_223642.pt" # flowers_autoencoder_epoch40_16_20260616_223642.pt" # flowers_autoencoder_epoch20_16_20260616_223642.pt" # flowers_autoencoder_epoch50_20260616_220930.pt"
     checkpoint = torch.load(checkpoint_path, map_location=device)
     model_trained1.load_state_dict(checkpoint["model_state_dict"])
 

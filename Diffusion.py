@@ -55,8 +55,8 @@ class GaussianDiffusion:
             noise = torch.randn_like(x0) # Sample noise
 
         # for elemenwise multiplication
-        sqrt_a = self.sqrt_alphas_cumprod[t][:, None, None, None]
-        sqrt_1a = self.sqrt_one_minus_alphas_cumprod[t][:, None, None, None]
+        sqrt_a = self.sqrt_alphas_prime[t][:, None, None, None]
+        sqrt_1a = self.sqrt_one_minus_alphas_prime[t][:, None, None, None]
 
         x_t = sqrt_a * x0 + sqrt_1a * noise
         return x_t, noise
@@ -74,7 +74,7 @@ class GaussianDiffusion:
     def p_sample(self, model, x, t):
         betas_t = self.betas[t][:, None, None, None] # [B, 1, 1, 1]
 
-        sqrt_one_minus_alpha_bar_t = (self.sqrt_one_minus_alphas_cumprod[t][:, None, None, None])
+        sqrt_one_minus_alpha_bar_t = (self.sqrt_one_minus_alphas_prime[t][:, None, None, None])
         sqrt_recip_alpha_t = (self.sqrt_recip_alphas[t][:, None, None, None])
 
         predicted_noise = model(x, t)
