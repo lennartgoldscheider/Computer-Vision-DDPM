@@ -1,39 +1,30 @@
-import time
 import torch
-from Denoising import UNet
-from Diffusion import GaussianDiffusion
-from Autoencoder import Autoencoder, Autoencoder2
+from Denoising_fertig import UNet
+from Autoencoder_fertig import Autoencoder
+from pathlib import Path
+from PIL import Image
+from torchvision import transforms
+from torch.utils.data import DataLoader, Dataset
 
-## unnecessary
-
-def get_timestamp():
-    return time.strftime("%d_%H%M")
-
-
-## necessary
-
+# Convert [-1,1] to [0,1]
 def denormalize(x):
-    # Convert [-1,1] -> [0,1]
     return ((x.clamp(-1, 1) + 1) / 2)
 
 # Load Latent DDPM
 def load_diffusion_model(checkpoint_path, device,
-                        latent_channels=4,
-                        base_channels=64,
-                        time_emb_dim=256):
+                         image_channels=3,
+                         base_channels=64,
+                         time_emb_dim=256):
 
     # initialize UNet
     model = UNet(
-        image_channels=latent_channels,
+        image_channels=image_channels,
         base_channels=base_channels,
         time_emb_dim=time_emb_dim,
     ).to(device)
 
     # Load model
-    checkpoint = torch.load(
-        checkpoint_path,
-        map_location=device
-    )
+    checkpoint = torch.load(checkpoint_path, map_location=device)
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
 
@@ -45,7 +36,7 @@ def load_autoencoder(checkpoint_path, device,
                      base_channels=64):
 
     # initialize Autoencoder
-    autoencoder = Autoencoder2(
+    autoencoder = Autoencoder(
         in_channels=3,
         latent_channels=latent_channels,
         base_channels=base_channels,
@@ -62,3 +53,26 @@ def freeze_autoencoder(autoencoder):
     autoencoder.eval()
     for p in autoencoder.parameters():
         p.requires_grad = False
+
+# Dataset (real images) for evaluate.py
+class ImageFolderDataset(Dataset):
+    def __init__(self, root, 
+                 image_size=64):
+        self.root = Path(root)
+        self.paths = list(self.root.glob("*.png")) + list(self.root.glob("*.jpg"))
+        self.transform = transforms.Compose([
+            transforms.Resize((image_size, image_size)),
+            transforms.PILToTensor(),  
+        ])
+
+    def __len__(self):
+        return len(self.paths)
+
+    def __getitem__(self, idx):
+        img = Image.open(self.paths[idx]).convert("RGB")
+        return self.transform(img)
+
+# for evaluate.py
+def load_images(folder, image_size=64, batch_size=32):
+    dataset = ImageFolderDataset(folder, image_size)
+    return DataLoader(dataset, batch_size=batch_size, shuffle=False)

@@ -1,17 +1,14 @@
 from pathlib import Path
-from DDPM_generate import generate
+from DDPM_generate_fertig import generate_DDPM
 
 # Generation of images for all DDPM checkpoints
 
 CHECKPOINT_DIR = Path("outputs/checkpoints")
 
 
-def find_checkpoint(epoch: int):
-
+def find_checkpoint(epoch):
     pattern = f"flowers_ddpm_epoch{epoch}_*.pt"
-    matches = sorted(
-        CHECKPOINT_DIR.glob(pattern)
-    )
+    matches = sorted(CHECKPOINT_DIR.glob(pattern))
 
     if len(matches) == 0:
         raise FileNotFoundError(f"No checkpoint found for epoch {epoch}")
@@ -22,10 +19,13 @@ def find_checkpoint(epoch: int):
     return matches[-1]
 
 
-def generate_from_epochs(epochs, num_images=16, batch_size=8, image_size=64, timesteps=1000,num_generations = None):
+def generate_from_epochs(epochs, 
+                         num_images=16, 
+                         batch_size=8, 
+                         image_size=64, 
+                         timesteps=1000):
 
     for epoch in epochs:
-
         checkpoint = find_checkpoint(epoch)
 
         print("\n" + "=" * 60)
@@ -33,13 +33,12 @@ def generate_from_epochs(epochs, num_images=16, batch_size=8, image_size=64, tim
         print(checkpoint.name)
         print("=" * 60)
 
-        generate(
+        generate_DDPM(
             checkpoint_path=str(checkpoint),
             num_images=num_images,
             batch_size=batch_size,
             image_size=image_size,
             timesteps=timesteps,
-            num_generations= num_generations,
         )
 
 
@@ -53,7 +52,6 @@ def main():
         batch_size=8,
         image_size=64,
         timesteps=1000,
-        num_generations=10,
     )
 
 

@@ -1,56 +1,39 @@
-import time
 import torch
-from pathlib import Path
-from PIL import Image
-from torch.utils.data import DataLoader, Dataset
-from torchvision import transforms
-
+from utils import load_images
+from tqdm import tqdm
 from torchmetrics.image.fid import FrechetInceptionDistance
 from torchmetrics.image.inception import InceptionScore
 
 
-# Dataset (real images)
-class ImageFolderDataset(Dataset):
-    def __init__(self, root, image_size=64):
-        self.root = Path(root)
-        self.paths = list(self.root.glob("*.png")) + list(self.root.glob("*.jpg"))
-        self.transform = transforms.Compose([
-            transforms.Resize((image_size, image_size)),
-            transforms.PILToTensor(),  # uint8 [0,255]
-        ])
-
-    def __len__(self):
-        return len(self.paths)
-
-    def __getitem__(self, idx):
-        img = Image.open(self.paths[idx]).convert("RGB")
-        return self.transform(img)
-
-
-def load_images(folder, image_size=64, batch_size=32):
-    dataset = ImageFolderDataset(folder, image_size)
-    return DataLoader(dataset, batch_size=batch_size, shuffle=False)
-
-
-# Metrics
+# compute Metrics
 def evaluate_metrics(real_dir, fake_dir, device="cuda"):
-    real_loader = load_images(real_dir)
-    fake_loader = load_images(fake_dir)
 
+    # load real and fake (generated) images
+    real_loader = load_images(real_dir) #get_dataloader(root=real_dir, batch_size=32, num_workers=0,
+                #shuffle= False, pin_memory=False, drop_last = False) #load_images(real_dir)
+    fake_loader = load_images(fake_dir) #get_dataloader(root=fake_dir, batch_size=32, num_workers=0,
+                #shuffle= False, pin_memory=False, drop_last = False) 
+
+    # initialize Fréchet Inception Distance (FID) and Inception Score (IS) 
     fid = FrechetInceptionDistance(feature=2048).to(device)
     inception = InceptionScore().to(device)
 
     # REAL IMAGES
-    for imgs in real_loader:
+    pbar_real = tqdm(real_loader, leave=False)
+    for imgs in pbar_real:
         imgs = imgs.to(device)
         fid.update(imgs, real=True)
+    print("Real Images done")
 
     # FAKE IMAGES
-    for imgs in fake_loader:
+    pbar_fake = tqdm(fake_loader, leave=False)
+    for imgs in pbar_fake:
         imgs = imgs.to(device)
         fid.update(imgs, real=False)
         inception.update(imgs)
+    print("Fake Images done")
 
+    # compute FID score and mean/ std of IS
     fid_score = fid.compute().item()
     is_mean, is_std = inception.compute()
 
@@ -58,14 +41,19 @@ def evaluate_metrics(real_dir, fake_dir, device="cuda"):
 
 def main():
 
+    # path to directories
     real_dir = "datasets/flowers"
-    fake_dirs = ["outputs/samples/flowers_ddpm_epoch20", "outputs/samples/flowers_ddpm_epoch180", "outputs/samples/latent_ddpm_epoch20", "outputs/samples/latent_ddpm_epoch180"]
+    fake_dirs = ["outputs/samples/latent_ddpm_epoch100"]
+    #["outputs/samples/flowers_ddpm_epoch20", "outputs/samples/flowers_ddpm_epoch180", "outputs/samples/latent_ddpm_epoch20", "outputs/samples/latent_ddpm_epoch180"]
+    
+    
     for fake_dir in fake_dirs:
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
         print("Evaluating...")
 
+        # compute metrics
         fid, is_mean, is_std = evaluate_metrics(real_dir=real_dir, fake_dir=fake_dir, device=device)
 
         print("\n--- Results ---")

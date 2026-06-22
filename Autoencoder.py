@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+import os
 
 # Residual Block
 class ResBlock(nn.Module):
@@ -26,10 +26,7 @@ class ResBlock(nn.Module):
         h = self.act(self.conv1(self.norm1(x)))
         h = self.conv2(self.norm2(h))
         return self.act(h + self.skip(x))
-
-
-
-# Encoder
+    
 class Encoder(nn.Module):
     def __init__(self, in_channels=3, latent_channels=4, base_channels=64):
         super().__init__()
@@ -52,7 +49,6 @@ class Encoder(nn.Module):
         x = self.down2(x)
 
         x = self.block3(x)
-        x = self.down3(x)
 
         x = self.final(x)
 
@@ -97,7 +93,6 @@ class Decoder(nn.Module):
         x = self.up2(x)
 
         x = self.block3(x)
-        x = self.up3(x)
 
         x = torch.tanh(self.out_block(x))
 
@@ -132,3 +127,14 @@ class Autoencoder(nn.Module):
         z = self.encode(x)
         x_hat = self.decode(z)
         return x_hat
+
+    def save_checkpoint(self,epoch, save_dir, run_name, timestamp, optimizer, avg_loss):
+        path = os.path.join(save_dir, f"{run_name}_epoch{epoch+1}_{timestamp}.pt")
+        torch.save({
+            "epoch": epoch,
+            "model_state_dict": self.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "losses": avg_loss,
+            "timestamp": timestamp
+        }, path)
+        print(f"\n✓ checkpoint saved → {path}")

@@ -3,12 +3,11 @@ import torch
 import torch.nn as nn
 import os
 
-# This file contains most parts needed for the Denoising process - namely the UNet and its components.
-# Part of the Denoising process are implemented in the GaussianDiffusion class from the Diffusion file.
+# Denoising network (UNet) and its components
 
-# Converts scalar t into a meaningfull vector - easier for the model to process.
+# Converts scalar t into a meaningfull vector
 class SinusoidalTimeEmbedding(nn.Module):
-    def __init__(self, dim: int):
+    def __init__(self, dim):
         super().__init__()
         self.dim = dim
 
@@ -23,16 +22,15 @@ class SinusoidalTimeEmbedding(nn.Module):
 
         return embeddings
 
-# Take image features with awareness of noiselevel
+# Convolution Layer with added time embedding to increase receptive field 
 class ConvBlock(nn.Module):
     def __init__(self, in_channels, out_channels, time_emb_dim):
         super().__init__()
-        # Make time embeddings compatible for use with the image representation
         self.time_mlp = nn.Linear(time_emb_dim, out_channels)
 
         self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1)
         self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1)
-        # Nonlinearity
+        
         self.act = nn.SiLU()
 
         self.residual = (
@@ -45,7 +43,7 @@ class ConvBlock(nn.Module):
         h = self.act(self.conv1(x))
 
         time_emb = self.act(self.time_mlp(t))
-        time_emb = time_emb[:, :, None, None] # [B, out_channels, 1, 1]
+        time_emb = time_emb[:, :, None, None] # Broadcast
 
         h = h + time_emb
         h = self.act(self.conv2(h)) # Time Embedding concat and processing
@@ -65,7 +63,8 @@ class DownBlock(nn.Module):
         x = self.downsample(x)
         return x, skip
 
-# Resolution increase, channel / feature information decrease. Concatination with skip information.
+# Resolution increase, channel / feature information decrease and
+# Concatination with skip information.
 class UpBlock(nn.Module):
     def __init__(self, in_channels, out_channels, time_emb_dim):
         super().__init__()
@@ -78,10 +77,12 @@ class UpBlock(nn.Module):
         x = self.block(x, t)
         return x
 
-# Combine the various features for the full structure
+# Combine the various features for the full UNet
 class UNet(nn.Module):
-    def __init__(self, image_channels=3, base_channels=64, time_emb_dim=256):
-        # For latent call with image_channels = latent_channels
+    def __init__(self, 
+                 image_channels=3, 
+                 base_channels=64, 
+                 time_emb_dim=256):
         super().__init__()
 
         self.time_mlp = nn.Sequential(SinusoidalTimeEmbedding(time_emb_dim),
@@ -89,17 +90,17 @@ class UNet(nn.Module):
 
         self.input_conv = nn.Conv2d(image_channels, base_channels, kernel_size=3, padding=1)
 
-        self.down1 = DownBlock(64, 128, time_emb_dim)
-        self.down2 = DownBlock(128, 256, time_emb_dim)
-        self.down3 = DownBlock(256, 512, time_emb_dim)
+        self.down1 = DownBlock(base_channels, base_channels*2, time_emb_dim)
+        self.down2 = DownBlock(base_channels*2, base_channels*4, time_emb_dim)
+        self.down3 = DownBlock(base_channels*4, base_channels*8, time_emb_dim)
 
-        self.bottleneck = ConvBlock(512, 512, time_emb_dim)
+        self.bottleneck = ConvBlock(base_channels*8, base_channels*8, time_emb_dim)
 
-        self.up1 = UpBlock(512, 512, time_emb_dim)
-        self.up2 = UpBlock(512, 256, time_emb_dim)
-        self.up3 = UpBlock(256, 128, time_emb_dim)
+        self.up1 = UpBlock(base_channels*8, base_channels*8, time_emb_dim)
+        self.up2 = UpBlock(base_channels*8, base_channels*4, time_emb_dim)
+        self.up3 = UpBlock(base_channels*4, base_channels*2, time_emb_dim)
 
-        self.output_conv = nn.Conv2d(128, image_channels, kernel_size=1)
+        self.output_conv = nn.Conv2d(base_channels*2, image_channels, kernel_size=1)
 
     def forward(self, x, t):
 
