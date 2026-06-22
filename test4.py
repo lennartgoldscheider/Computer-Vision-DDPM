@@ -1,5 +1,5 @@
 from pathlib import Path
-from latent_DDPM_generate_fertig import generate_latent_DDPM
+from latent_DDPM_generate import generate_latent_DDPM
 
 # Generation of images for all Latent DDPM checkpoints
 

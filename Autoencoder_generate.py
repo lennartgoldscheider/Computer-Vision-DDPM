@@ -2,7 +2,7 @@ import time
 from pathlib import Path
 import torch
 from torchvision.utils import save_image, make_grid
-from Dataloader_fertig import get_dataloader
+from Dataloader import get_dataloader
 from utils import denormalize, load_autoencoder
 
 # This file is used to generate images via autoencoder. 

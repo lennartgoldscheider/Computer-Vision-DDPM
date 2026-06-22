@@ -5,9 +5,9 @@ import numpy as np
 import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
-from Denoising_fertig import UNet
-from Diffusion_fertig import GaussianDiffusion
-from Dataloader_fertig import get_dataloader
+from Denoising import UNet
+from Diffusion import GaussianDiffusion
+from Dataloader import get_dataloader
 
 # Training pipeline for DDPM.
 def train(model, diffusion, dataloader, device,

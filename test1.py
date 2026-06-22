@@ -17,8 +17,8 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
 from PIL import Image
-from Dataloader_fertig import get_dataloader
-from Diffusion_fertig import GaussianDiffusion
+from Dataloader import get_dataloader
+from Diffusion import GaussianDiffusion
 
 
 # Hilfsfunktionen

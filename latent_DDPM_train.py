@@ -5,10 +5,10 @@ import os
 import numpy as np
 from tqdm import tqdm
 import time
-from Dataloader_fertig import get_dataloader
-from Denoising_fertig import UNet
-from Diffusion_fertig import GaussianDiffusion
-from Autoencoder_fertig import Autoencoder
+from Dataloader import get_dataloader
+from Denoising import UNet
+from Diffusion import GaussianDiffusion
+from Autoencoder import Autoencoder
 from utils import freeze_autoencoder
 
 # This file is used to train the latent DDPM with a given autoencoder version.

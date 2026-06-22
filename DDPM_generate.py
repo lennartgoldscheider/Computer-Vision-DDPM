@@ -2,7 +2,7 @@ import time
 from pathlib import Path
 import torch
 from torchvision.utils import save_image, make_grid
-from Diffusion_fertig import GaussianDiffusion
+from Diffusion import GaussianDiffusion
 from utils import denormalize, load_diffusion_model
 
 # This file implements the generation pipeline for the DDPM model.

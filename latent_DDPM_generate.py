@@ -2,7 +2,7 @@ import time
 from pathlib import Path
 import torch
 from torchvision.utils import save_image, make_grid
-from Diffusion_fertig import GaussianDiffusion
+from Diffusion import GaussianDiffusion
 from utils import denormalize, load_diffusion_model, load_autoencoder
 
 # This file is used to generate images via latent DDPM. 

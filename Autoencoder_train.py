@@ -1,12 +1,11 @@
 import time
 import os
-from pathlib import Path
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
-from Autoencoder_fertig import Autoencoder
-from Dataloader_fertig import get_dataloader
+from Autoencoder import Autoencoder
+from Dataloader import get_dataloader
 
 # Training of the autoencoder
 

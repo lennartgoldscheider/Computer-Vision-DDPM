@@ -1,8 +1,8 @@
 import torch
 import matplotlib.pyplot as plt
 from pathlib import Path
-from Autoencoder_fertig import Autoencoder
-from Dataloader_fertig import get_dataloader
+from Autoencoder import Autoencoder
+from Dataloader import get_dataloader
 from utils import load_autoencoder, denormalize
 
 # Reconstruction test of Images by the Autoencoder

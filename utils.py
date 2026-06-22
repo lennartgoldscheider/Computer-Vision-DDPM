@@ -1,6 +1,6 @@
 import torch
-from Denoising_fertig import UNet
-from Autoencoder_fertig import Autoencoder
+from Denoising import UNet
+from Autoencoder import Autoencoder
 from pathlib import Path
 from PIL import Image
 from torchvision import transforms
