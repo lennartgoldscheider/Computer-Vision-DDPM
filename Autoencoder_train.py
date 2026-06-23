@@ -71,13 +71,13 @@ def main():
     print(f"Using device: {device}")
     checkpoint_dir = "outputs/checkpoints"
     os.makedirs(checkpoint_dir, exist_ok=True)
-    run_name = "flowers_autoencoder_whole_8channels_norm"
+    run_name = "flowers_autoencoder_whole_4channels_nownorm_L1"
     timestamp = time.strftime("%Y%m%d_%H%M")
 
     # set models and dataloader
     model = Autoencoder(
         in_channels=3,
-        latent_channels=8,
+        latent_channels=4,
         base_channels=64
     ).to(device)
     dataloader = get_dataloader(
@@ -92,8 +92,8 @@ def main():
         model=model,
         dataloader=dataloader,
         device=device,
-        epochs=2000,
-        save_every=1,#20,
+        epochs=200,
+        save_every=20,
         run_name=run_name,
         timestamp= timestamp
     )
@@ -101,12 +101,12 @@ def main():
     # create files for plotting and easy reading
     losses_save_dir = "outputs/training"
     os.makedirs(losses_save_dir, exist_ok=True)
-    torch.save(losses, f"outputs/training/autoencoder_losses_{timestamp}.pt")
+    torch.save(losses, f"outputs/training/{run_name}_losses_{timestamp}.pt")
 
     print("\n✓ Losses saved to:")
-    print(f"  - output/training/autoencoder_losses_{timestamp}.pt")
+    print(f"  - output/training/{run_name}_losses_{timestamp}.pt")
 
-    loss_path_txt = os.path.join(losses_save_dir, f"autoencoder_losses_{timestamp}.txt")
+    loss_path_txt = os.path.join(losses_save_dir, f"{run_name}_losses_{timestamp}.txt")
     with open(loss_path_txt, "w") as f:
         for loss in losses:
             f.write(f"{loss}\n")

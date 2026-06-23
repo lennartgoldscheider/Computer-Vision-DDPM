@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import os
-import numpy as np
 from tqdm import tqdm
 import time
 from Dataloader import get_dataloader
@@ -36,7 +35,7 @@ def train_latent_ddpm(model, diffusion, autoencoder, dataloader, device,
     latents_all = torch.cat(latents_all, dim=0)
     mean = latents_all.mean()
     std = latents_all.std()
-    torch.save({"mean": mean, "std": std}, "outputs/checkpoints/latent_stats.pt")
+    torch.save({"mean": mean, "std": std}, "outputs/checkpoints/{run_name}_stats.pt")
 
 
     model = model.to(device)
@@ -134,7 +133,7 @@ def main():
         num_workers=0
     )
 
-    # load autoencoder checkpoint
+    # load autoencoder checkpoint and freeze it
     ae_ckpt = torch.load(autoencoder_checkpoint, map_location=device)
     autoencoder.load_state_dict(ae_ckpt["model_state_dict"])
     freeze_autoencoder(autoencoder)

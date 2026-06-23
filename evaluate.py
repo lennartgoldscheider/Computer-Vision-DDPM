@@ -82,3 +82,13 @@ if __name__ == "__main__":
 # --- Results ---
 # FID: 266.05
 # Inception Score: 1.46 ± 0.30
+
+# --- Results --- 16channels
+# FID: 114.06
+# Inception Score: 3.85 ± 0.10
+
+# --- Results --- 8channels
+# FID: 76.88
+# Inception Score: 2.85 ± 0.15
+
+
