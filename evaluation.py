@@ -61,35 +61,20 @@ def main():
 if __name__ == "__main__":
     main()
 
-# --- Results ---
-# FID: 423.27
-# Inception Score: 1.31 ± 0.24
-# Evaluating...
-
-# --- Results ---
-# FID: 235.21
-# Inception Score: 1.54 ± 0.24
-# Evaluating...
-
-# --- Results ---
-# FID: 385.30
-# Inception Score: 1.45 ± 0.28
-# Evaluating...
-
-# --- Results ---
-# FID: 266.05
-# Inception Score: 1.46 ± 0.30
+# --- Results DDPM ---
+# FID: 219.87
+# Inception Score: 3.02 ± 0.11
 
 
-# --- Results --- 16channels
+# --- Results Latent DDPM 16 channels ---
 # FID: 114.06
 # Inception Score: 3.85 ± 0.10
 
-# --- Results --- 8channels
+# --- Results Latent DDPM 8 channels ---
 # FID: 76.88
 # Inception Score: 2.85 ± 0.15
 
-# --- Results --- 4channels
+# --- Results Latent DDPM 4 channels ---
 # FID: 103.45
 # Inception Score: 2.61 ± 0.04
 
