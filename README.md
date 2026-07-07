@@ -56,23 +56,24 @@ The repository is organized into independent modules to simplify experimentation
 Computer-Vision-DDPM/
 │
 ├── data/             # Dataset download and preprocessing
-├── network/           # Autoencoder and DDPM architectures
-├── train/         # Training utilities
-├── generate/       # Generating utlilities
-├── evaluate/       # Evaluation metrics (FID, IS)
+├── network/          # Autoencoder and DDPM architectures
+├── train/            # Training utilities
+├── generate/         # Generating utlilities
+├── evaluation/       # Evaluation metrics (FID, IS)
 ├── outputs/          # Checkpoints and generated samples
 ├── globals/          # Set important parameters for training and generating
 ├── utils/            # Helper functions
+├── tests/            # Folder with test functions
 └── README.md
 ```
 
 ---
 
 # Tests
-Test1 - file to check the Diffusion functionality
-Test2 - file to generate images with the given ddpm checkpoints
-Test3 - file to test the Autoencoder reconstruction quality
-Test4 - file to generate images with the given latent ddpm checkpoints
+- Test1 - file to check the Diffusion functionality
+- Test2 - file to generate images with the given ddpm checkpoints
+- Test3 - file to test the Autoencoder reconstruction quality
+- Test4 - file to generate images with the given latent ddpm checkpoints
 
 # Training
 
@@ -96,19 +97,6 @@ Generated images can be evaluated using
 - Inception Score (IS)
 
 These metrics provide quantitative comparisons between generated and real images.
-
----
-
-# Results
-
-Example generated images and reconstruction results can be found in the repository's output folder.
-
-Current experiments investigate the influence of
-
-- latent dimensionality
-- autoencoder architecture
-
-on image quality.
 
 ---
 
