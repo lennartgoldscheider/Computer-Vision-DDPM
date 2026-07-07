@@ -110,7 +110,7 @@ GitHub: https://github.com/lennartgoldscheider
 
 **Felix Krah**
 
-EMAI - Erasmus Mundus Master of AI
+EMAI (Erasmus Mundus Master of AI)
 Universitat Pompeu Fabra
 
 GitHub: https://github.com/felixk525
