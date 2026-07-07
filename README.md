@@ -23,7 +23,7 @@ latent_DDPM_train       -
 
 # Computer Vision – Denoising Diffusion Probabilistic Models
 
-This project was developed as part of my work in deep generative models and computer vision during my M.Sc. in Machine Learning at the University of Tübingen.
+This project was developed as part of the Computer Vision class at the Sapienza University in Rome.
 
 The repository contains a complete implementation of a **Denoising Diffusion Probabilistic Model (DDPM)** in **PyTorch**, including data handling, neural network architectures, training, image generation, and quantitative evaluation. The project also explores latent image representations through a convolutional autoencoder and evaluates generated images using **Frechet Inception Distance (FID)** and **Inception Score (IS)**.
 
@@ -31,29 +31,15 @@ The repository contains a complete implementation of a **Denoising Diffusion Pro
 
 ## Summary
 
-- [Getting Started](#getting-started)
+- [Installation](#installation)
 - [Project Structure](#project-structure)
 - [Training](#training)
 - [Evaluation](#evaluation)
 - [Results](#results)
-- [Future Improvements](#future-improvements)
 - [Authors](#authors)
 - [License](#license)
-- [Acknowledgments](#acknowledgments)
 
 ---
-
-# Getting Started
-
-These instructions describe how to set up the project locally for training and evaluation.
-
-## Prerequisites
-
-- Ubuntu 22.04 (tested)
-- Python 3.12+
-- PyTorch
-- CUDA-compatible GPU (recommended)
-- Git
 
 ## Installation
 
@@ -89,8 +75,10 @@ Computer-Vision-DDPM/
 ├── data/             # Dataset download and preprocessing
 ├── models/           # Autoencoder and DDPM architectures
 ├── training/         # Training utilities
+├── generating/       # Generating utlilities
 ├── evaluation/       # Evaluation metrics (FID, IS)
 ├── outputs/          # Checkpoints and generated samples
+├── globals/          # Set important parameters for training and generating
 ├── utils/            # Helper functions
 └── README.md
 ```
@@ -130,23 +118,8 @@ Current experiments investigate the influence of
 
 - latent dimensionality
 - autoencoder architecture
-- reconstruction loss functions
-- diffusion hyperparameters
 
 on image quality.
-
----
-
-# Future Improvements
-
-Potential future extensions include
-
-- DDIM sampling
-- Classifier-Free Guidance
-- Exponential Moving Average (EMA)
-- Attention blocks
-- Conditional diffusion models
-- Latent Diffusion Models (LDM)
 
 ---
 
@@ -161,14 +134,17 @@ GitHub: https://github.com/lennartgoldscheider
 
 ---
 
+**Felix Krah**
+
+
+University 
+
+GitHub: https://github.com/lennartgoldscheider
+
+---
+
 # License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 ---
-
-# Acknowledgments
-
-- Jonathan Ho et al. for introducing Denoising Diffusion Probabilistic Models.
-- The PyTorch team for the deep learning framework.
-- The University of Tübingen for supporting this project.
