@@ -12,7 +12,6 @@ The repository contains a complete implementation of a **Denoising Diffusion Pro
 - [Project Structure](#project-structure)
 - [Training](#training)
 - [Evaluation](#evaluation)
-- [Results](#results)
 - [Authors](#authors)
 - [License](#license)
 
