@@ -108,6 +108,8 @@ University of Tübingen
 
 GitHub: https://github.com/lennartgoldscheider
 
+---
+
 **Felix Krah**
 
 EMAI (Erasmus Mundus Master of AI)
