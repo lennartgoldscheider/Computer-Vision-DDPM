@@ -56,10 +56,10 @@ The repository is organized into independent modules to simplify experimentation
 Computer-Vision-DDPM/
 │
 ├── data/             # Dataset download and preprocessing
-├── models/           # Autoencoder and DDPM architectures
-├── training/         # Training utilities
-├── generating/       # Generating utlilities
-├── evaluation/       # Evaluation metrics (FID, IS)
+├── network/           # Autoencoder and DDPM architectures
+├── train/         # Training utilities
+├── generate/       # Generating utlilities
+├── evaluate/       # Evaluation metrics (FID, IS)
 ├── outputs/          # Checkpoints and generated samples
 ├── globals/          # Set important parameters for training and generating
 ├── utils/            # Helper functions
