@@ -56,7 +56,7 @@ The repository is organized into independent modules to simplify experimentation
 Computer-Vision-DDPM/
 │
 ├── data/             # Dataset download and preprocessing
-├── network/          # Autoencoder and DDPM architectures
+├── network/          # Autoencoder and UNet architectures
 ├── train/            # Training utilities
 ├── generate/         # Generating utlilities
 ├── evaluation/       # Evaluation metrics (FID, IS)
@@ -109,14 +109,11 @@ University of Tübingen
 
 GitHub: https://github.com/lennartgoldscheider
 
----
-
 **Felix Krah**
 
+EMAI - Erasmus Mundus Master of AI
 
-University 
-
-GitHub: https://github.com/lennartgoldscheider
+GitHub: https://github.com/felixk525
 
 ---
 
